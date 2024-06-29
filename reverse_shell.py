@@ -3,7 +3,7 @@ import subprocess
 import os
 import time
 
-SERVER_IP = "45.79.93.184"
+SERVER_IP = "x.x.x.x"
 SERVER_PORT = 4444
 TIMEOUT_DURATION = 30  # Increased timeout duration
 
